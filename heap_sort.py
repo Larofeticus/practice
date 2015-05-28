@@ -41,6 +41,34 @@ def heapSort(A):
     out.append(A[0])
     return out
 
+def heapMin(A):
+    if len(A) > 0:
+        return A[0]
+    return []
+
+def heapMinExtract(A):
+    if len(A) == 0:
+        return []
+    out = A[0]
+    A[0] = A.pop()
+    heapify(A, 0)
+    return out
+
+def heapDecreaseKey(A, i, key):
+    if key > A[i]:
+        return
+    A[i] = key
+    while (i > 1) and A[parent(i)] > A[i]:
+        A[i], A[parent(i)] = A[parent(i)], A[i]
+        i = parent(i)
+
+def heapInsert(A, key):
+    A.append(key)
+    i = len(A)-1
+    while (i > 1) and A[parent(i)] > A[i]:
+        A[i], A[parent(i)] = A[parent(i)], A[i]
+        i = parent(i)
+
 hp = p[:]
 buildHeap(hp)
 
@@ -49,3 +77,15 @@ print('heap: ',hp)
 s = heapSort(p[:])
 
 print('sorted: ', s)
+
+print('min from heap: ', heapMin(hp), heapMinExtract(hp))
+print('heap without min:       ', hp)
+
+heapDecreaseKey(hp, 10, hp[10]>>1)
+print('decrease a key by half: ', hp)
+
+heapInsert(hp, 500)
+
+print('insert 500: ', hp)
+print('sorted after insert: ', heapSort(hp[:]))
+
