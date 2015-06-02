@@ -37,12 +37,7 @@ def rpn(ops):
             if(c == '/'):
                 out = a / b
             #splice a new list with the performed operation replaced with it's output
-            outlist = [out]
-            if(i>0):
-                outlist = ops[:i] + outlist
-            if(i < len(ops)-2):
-                outlist = outlist + ops[i+3:]
-            return rpn(outlist);
+            return rpn(ops[:i] + [str(out)] + ops[i+3:]);
     #if the for loop found no valid operations
     return ['error invalid operations list 3']
 
