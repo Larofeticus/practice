@@ -5,19 +5,23 @@ def isfloat(v): #i'm shocked there isn't something built in to do this
     except:
         return False
 
+#exception classes
+class EmptyOperationsList(Exception): pass
+class InvalidOperationsList(Exception): pass
+class DivideByZero(Exception): pass
+
 def rpn(ops):
     if(len(ops) == 0):
-        return ['empty operations list']
+        raise EmptyOperationsList()
     
     if(len(ops) == 1):
-        #check if ops are invalid because only an operation remains
-        if(ops[0] in ['+','-','/','*']):
-            return ['invalid operations list 1']
-        return ops #either an error string or a single number
-    
+        #check if ops are invalid because the last item
+        #isn't a number
+        if(not isfloat(ops[0])): raise InvalidOperationsList()
+        return ops[0]
+
     #two items regardless of kind must be invalid list
-    if(len(ops) == 2):
-        return ['invalid operations list 2']
+    if(len(ops) == 2): raise InvalidOperationsList()
 
     #now search ops for the case of 2 digits followed by an operation
     for i in range(0, len(ops)-2):
@@ -35,11 +39,12 @@ def rpn(ops):
             if(c == '*'):
                 out = a * b
             if(c == '/'):
+                if(b == 0): raise DivideByZero()
                 out = a / b
             #splice a new list with the performed operation replaced with it's output
             return rpn(ops[:i] + [str(out)] + ops[i+3:]);
-    #if the for loop found no valid operations
-    return ['error invalid operations list 3']
-
+    #if the for loop found no valid operations to perform
+    raise InvalidOperationsList()
 
 print(rpn(['5', '6.2', '-4', '-', '+', '10.6', '*']))
+print(rpn(['5', '6.2', '-4', '-', '+', '10.6', '*', '0.0', '/']))
